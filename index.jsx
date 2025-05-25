@@ -1,7 +1,7 @@
-import React from 'react'
 import {
   getDefaultWallets,
   RainbowKitProvider,
+  ConnectButton,
   darkTheme
 } from '@rainbow-me/rainbowkit'
 import {
@@ -13,11 +13,9 @@ import {
   useDisconnect
 } from 'wagmi'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { Chain } from 'wagmi/chains'
 import '@rainbow-me/rainbowkit/styles.css'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 
-// Define Monad Testnet chain
+// Definição da Monad Testnet
 const monadTestnet = {
   id: 0x279f,
   name: 'Monad Testnet',
@@ -38,20 +36,18 @@ const monadTestnet = {
   testnet: true,
 }
 
-// Configuração da chain + provider
+// Configuração
 const { chains, publicClient } = configureChains(
   [monadTestnet],
   [jsonRpcProvider({ rpc: () => ({ http: 'https://testnet-rpc.monad.xyz' }) })]
 )
 
-// Wallet connectors padrão (MetaMask, WalletConnect, etc.)
 const { connectors } = getDefaultWallets({
   appName: 'Monad Wallet Test',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // ou use qualquer valor para teste
+  projectId: 'monad-test-project', // pode ser qualquer valor para teste
   chains,
 })
 
-// Configuração do Wagmi
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
@@ -61,10 +57,7 @@ const wagmiConfig = createConfig({
 function WalletInfo() {
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const { data: balance } = useBalance({
-    address,
-    watch: true,
-  })
+  const { data: balance } = useBalance({ address, watch: true })
 
   if (!isConnected) return null
 
@@ -77,12 +70,12 @@ function WalletInfo() {
   )
 }
 
-export default function App() {
+export default function Home() {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={darkTheme()}>
         <div style={{ padding: 20 }}>
-          <h1>Conectar Carteira à Monad</h1>
+          <h1>Conectar Carteira - Monad</h1>
           <ConnectButton />
           <WalletInfo />
         </div>
